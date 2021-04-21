@@ -26,7 +26,6 @@ E:\CodeWorks\CamCapture\CamCapture\bin\Debug\sv\ZedGraph.resources.dll
 E:\CodeWorks\CamCapture\CamCapture\bin\Debug\tr\ZedGraph.resources.dll
 E:\CodeWorks\CamCapture\CamCapture\bin\Debug\zh-cn\ZedGraph.resources.dll
 E:\CodeWorks\CamCapture\CamCapture\bin\Debug\zh-tw\ZedGraph.resources.dll
-E:\CodeWorks\CamCapture\CamCapture\obj\Debug\CamCapture.csprojAssemblyReference.cache
 E:\CodeWorks\CamCapture\CamCapture\obj\Debug\CamCapture.frmMain.resources
 E:\CodeWorks\CamCapture\CamCapture\obj\Debug\CamCapture.Properties.Resources.resources
 E:\CodeWorks\CamCapture\CamCapture\obj\Debug\CamCapture.csproj.GenerateResource.cache
@@ -36,3 +35,17 @@ E:\CodeWorks\CamCapture\CamCapture\obj\Debug\CamCapture.exe
 E:\CodeWorks\CamCapture\CamCapture\obj\Debug\CamCapture.pdb
 E:\CodeWorks\CamCapture\CamCapture\bin\Debug\DirectShowLib.dll
 E:\CodeWorks\CamCapture\CamCapture\bin\Debug\DirectShowLib.xml
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.Direct3D9.dll
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.dll
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.DXGI.dll
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.Mathematics.dll
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.MediaFoundation.dll
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.pdb
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.Direct3D9.pdb
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.Direct3D9.xml
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.DXGI.pdb
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.DXGI.xml
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.Mathematics.pdb
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.Mathematics.xml
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.MediaFoundation.pdb
+E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.MediaFoundation.xml

@@ -11,18 +11,24 @@ using System.Windows.Forms;
 using Emgu.CV;
 using Emgu.CV.Structure;
 using DirectShowLib;
+using SharpDX.MediaFoundation;
 
 namespace CamCapture
 {
     public partial class frmMain : Form
     {
         private Capture cap;
-        private List<DsDevice> videocaptures;
+        public string[] cameraNames;
+        Emgu.CV.VideoWriter vwr;
+        bool inCapture;
+
         public frmMain()
         {
             InitializeComponent();
-            videocaptures = new List<DsDevice>();
             this.cap = null;
+            this.inCapture = false;
+            this.vwr = null;
+
         }
 
         
@@ -40,15 +46,47 @@ namespace CamCapture
             }
             catch { }
             /**/
+            this.cameraNames = ListOfAttachedCameras();
+            this.cbxCameras.Items.Clear();
+            if (this.cameraNames != null)
+            {
+                for (int i = 0; i < this.cameraNames.Length; ++i)
+                    this.cbxCameras.Items.Add(this.cameraNames[i]);
 
-            var devices = new List<DsDevice>(DsDevice.GetDevicesOfCat(FilterCategory.VideoInputDevice));
-            
-
+                this.cbxCameras.SelectedIndex = 0;
+            }
         }
 
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
             Properties.Settings.Default.Save();
+        }
+
+        public static int GetCameraIndexForPartName(string partName)
+        {
+            var cameras = ListOfAttachedCameras();
+            for (var i = 0; i < cameras.Count(); i++)
+            {
+                if (cameras[i].ToLower().Contains(partName.ToLower()))
+                {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        public static string[] ListOfAttachedCameras()
+        {
+            var cameras = new List<string>();
+            var attributes = new MediaAttributes(1);
+            attributes.Set(CaptureDeviceAttributeKeys.SourceType.Guid, CaptureDeviceAttributeKeys.SourceTypeVideoCapture.Guid);
+            var devices = MediaFactory.EnumDeviceSources(attributes);
+            for (var i = 0; i < devices.Count(); i++)
+            {
+                var friendlyName = devices[i].Get(CaptureDeviceAttributeKeys.FriendlyName);
+                cameras.Add(friendlyName);
+            }
+            return cameras.ToArray();
         }
     }
 }

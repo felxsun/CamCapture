@@ -33,15 +33,23 @@ namespace CamCapture
             this.mnuFile = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.cbxCamera = new System.Windows.Forms.Label();
+            this.cbxCameras = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).BeginInit();
             this.mnuFile.SuspendLayout();
+            this.panel2.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.SuspendLayout();
             // 
             // picMain
             // 
-            this.picMain.Location = new System.Drawing.Point(2, 27);
+            this.picMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picMain.Location = new System.Drawing.Point(0, 0);
             this.picMain.Name = "picMain";
-            this.picMain.Size = new System.Drawing.Size(465, 320);
+            this.picMain.Size = new System.Drawing.Size(469, 276);
             this.picMain.TabIndex = 0;
             this.picMain.TabStop = false;
             // 
@@ -68,12 +76,49 @@ namespace CamCapture
             this.settingToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
             this.settingToolStripMenuItem.Text = "&Setting";
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.picMain);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel2.Location = new System.Drawing.Point(0, 92);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(469, 276);
+            this.panel2.TabIndex = 3;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.cbxCamera);
+            this.panel1.Controls.Add(this.cbxCameras);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(0, 24);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(469, 68);
+            this.panel1.TabIndex = 4;
+            // 
+            // cbxCamera
+            // 
+            this.cbxCamera.AutoSize = true;
+            this.cbxCamera.Location = new System.Drawing.Point(12, 6);
+            this.cbxCamera.Name = "cbxCamera";
+            this.cbxCamera.Size = new System.Drawing.Size(29, 12);
+            this.cbxCamera.TabIndex = 1;
+            this.cbxCamera.Text = "相機";
+            // 
+            // cbxCameras
+            // 
+            this.cbxCameras.FormattingEnabled = true;
+            this.cbxCameras.Location = new System.Drawing.Point(47, 3);
+            this.cbxCameras.Name = "cbxCameras";
+            this.cbxCameras.Size = new System.Drawing.Size(121, 20);
+            this.cbxCameras.TabIndex = 0;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 492);
-            this.Controls.Add(this.picMain);
+            this.ClientSize = new System.Drawing.Size(469, 368);
+            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel2);
             this.Controls.Add(this.mnuFile);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.mnuFile;
@@ -86,6 +131,9 @@ namespace CamCapture
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.mnuFile.ResumeLayout(false);
             this.mnuFile.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -97,6 +145,10 @@ namespace CamCapture
         private System.Windows.Forms.MenuStrip mnuFile;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label cbxCamera;
+        private System.Windows.Forms.ComboBox cbxCameras;
     }
 }
 
