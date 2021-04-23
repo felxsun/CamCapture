@@ -48,9 +48,10 @@ namespace CamCapture
             // 
             this.picMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.picMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picMain.Location = new System.Drawing.Point(0, 0);
+            this.picMain.Location = new System.Drawing.Point(5, 5);
             this.picMain.Name = "picMain";
-            this.picMain.Size = new System.Drawing.Size(469, 386);
+            this.picMain.Size = new System.Drawing.Size(459, 459);
+            this.picMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.picMain.TabIndex = 0;
             this.picMain.TabStop = false;
             // 
@@ -79,11 +80,13 @@ namespace CamCapture
             // 
             // panel2
             // 
+            this.panel2.BackColor = System.Drawing.Color.Black;
             this.panel2.Controls.Add(this.picMain);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 52);
+            this.panel2.Location = new System.Drawing.Point(0, 58);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(469, 386);
+            this.panel2.Padding = new System.Windows.Forms.Padding(5);
+            this.panel2.Size = new System.Drawing.Size(469, 469);
             this.panel2.TabIndex = 3;
             // 
             // panel1
@@ -93,7 +96,7 @@ namespace CamCapture
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(469, 28);
+            this.panel1.Size = new System.Drawing.Size(469, 34);
             this.panel1.TabIndex = 4;
             // 
             // cbxCamera
@@ -118,7 +121,7 @@ namespace CamCapture
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 438);
+            this.ClientSize = new System.Drawing.Size(469, 527);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.mnuFile);

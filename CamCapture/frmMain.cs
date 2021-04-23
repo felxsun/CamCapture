@@ -114,6 +114,8 @@ namespace CamCapture
             try
             {
                 this.cap = new Capture(cameraIndex);
+                this.cap.ImageGrabbed += VideoCapture_ImageGrabbed;
+                this.cap.Start();
             }
             catch(Exception ex)
             {
@@ -121,6 +123,28 @@ namespace CamCapture
                 MessageBox.Show("Failed to link camear" + Environment.NewLine + ex.Message);
             }
         }
+        private void VideoCapture_ImageGrabbed(object sender, EventArgs e)
+        {
+            /*
+            if (fileChanged)
+            {
+                totalFrames = this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount);
+                fps = this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps);
+                int fourcc = Convert.ToInt32(videoCapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FourCC));
+                int frameHeight = Convert.ToInt32(videoCapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight));
+                int frameWidth = Convert.ToInt32(videoCapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth));
+                string destination = "C:\\Users\\ITNOA\\Desktop\\savedVideoDHS\\" + i + ".avi";
+                videoWriter = new VideoWriter(destination, VideoWriter.Fourcc('I', 'Y', 'U', 'V'), fps, new Size(frameWidth, frameHeight), true);
+                fileChanged = false;
+            }
+            /**/
+
+            Mat m = new Mat();
+            this.cap.Retrieve(m);
+            picMain.Image = m.ToImage<Bgr, byte>().Bitmap;
+            //videoWriter.Write(m);
+        }
+
         private void disconnectCapture()
         {
             if(this.cap!=null)
