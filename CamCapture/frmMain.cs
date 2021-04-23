@@ -34,6 +34,12 @@ namespace CamCapture
         
         private void frmMain_Load(object sender, EventArgs e)
         {
+            this.Text = String.Format("影像定時擷取器  {0}.{1}.{2} {3}:{4}"
+                , ThisAssembly.Git.SemVer.Major
+                , ThisAssembly.Git.SemVer.Minor
+                , ThisAssembly.Git.SemVer.Patch
+                , ThisAssembly.Git.Branch
+                , ThisAssembly.Git.Commits);
             /*
             captures.Clear();
             try
@@ -59,6 +65,7 @@ namespace CamCapture
 
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
         {
+            disconnectCapture();
             Properties.Settings.Default.Save();
         }
 
@@ -87,6 +94,46 @@ namespace CamCapture
                 cameras.Add(friendlyName);
             }
             return cameras.ToArray();
+        }
+
+        private void cbxCameras_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ComboBox bx = (ComboBox)sender;
+            selectCamera(bx.SelectedIndex);
+
+        }
+
+        private void selectCamera(int cameraIndex)
+        {
+            if(cameraIndex<0 || this.cameraNames == null || cameraIndex >= this.cameraNames.Length)
+            {
+                disconnectCapture();
+                return;
+            }  
+            
+            try
+            {
+                this.cap = new Capture(cameraIndex);
+            }
+            catch(Exception ex)
+            {
+                disconnectCapture();
+                MessageBox.Show("Failed to link camear" + Environment.NewLine + ex.Message);
+            }
+        }
+        private void disconnectCapture()
+        {
+            if(this.cap!=null)
+            {
+                this.cap.Dispose();
+                this.cap = null;
+            }
+        }
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (MessageBox.Show("立即結束此程式?", "影像資料定時錄製器", MessageBoxButtons.YesNo) != DialogResult.Yes)
+                e.Cancel = true;
         }
     }
 }

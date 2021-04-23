@@ -49,3 +49,5 @@ E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.Mathematics.pdb
 E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.Mathematics.xml
 E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.MediaFoundation.pdb
 E:\CodeWorks\CamCapture\CamCapture\bin\Debug\SharpDX.MediaFoundation.xml
+E:\CodeWorks\CamCapture\CamCapture\obj\Debug\GitInfo.cache
+E:\CodeWorks\CamCapture\CamCapture\obj\Debug\CamCapture.csprojAssemblyReference.cache
