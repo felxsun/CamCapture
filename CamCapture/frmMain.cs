@@ -12,6 +12,7 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using DirectShowLib;
 using SharpDX.MediaFoundation;
+using System.Threading;
 
 namespace CamCapture
 {
@@ -105,11 +106,9 @@ namespace CamCapture
 
         private void selectCamera(int cameraIndex)
         {
+            disconnectCapture();
             if(cameraIndex<0 || this.cameraNames == null || cameraIndex >= this.cameraNames.Length)
-            {
-                disconnectCapture();
                 return;
-            }  
             
             try
             {
@@ -149,8 +148,10 @@ namespace CamCapture
         {
             if(this.cap!=null)
             {
-                this.cap.Dispose();
-                this.cap = null;
+                    this.cap.Stop();
+                    this.cap.ImageGrabbed -= VideoCapture_ImageGrabbed;
+                    this.cap.Dispose();
+                    this.cap = null;
             }
         }
 
