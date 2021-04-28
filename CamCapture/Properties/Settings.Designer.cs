@@ -34,5 +34,65 @@ namespace CamCapture.Properties {
                 this["camIndex"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("video")]
+        public string directoryVideo {
+            get {
+                return ((string)(this["directoryVideo"]));
+            }
+            set {
+                this["directoryVideo"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("img")]
+        public string directoryPicture {
+            get {
+                return ((string)(this["directoryPicture"]));
+            }
+            set {
+                this["directoryPicture"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int imageInterval {
+            get {
+                return ((int)(this["imageInterval"]));
+            }
+            set {
+                this["imageInterval"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1800")]
+        public int recordDuration {
+            get {
+                return ((int)(this["recordDuration"]));
+            }
+            set {
+                this["recordDuration"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("600")]
+        public int videoDuration {
+            get {
+                return ((int)(this["videoDuration"]));
+            }
+            set {
+                this["videoDuration"] = value;
+            }
+        }
     }
 }

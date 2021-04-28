@@ -30,79 +30,63 @@ namespace CamCapture
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
-            this.picMain = new System.Windows.Forms.PictureBox();
             this.mnuFile = new System.Windows.Forms.MenuStrip();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.settingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.panel2 = new System.Windows.Forms.Panel();
+            this.mnuSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.btnStart = new System.Windows.Forms.Button();
             this.cbxCamera = new System.Windows.Forms.Label();
             this.cbxCameras = new System.Windows.Forms.ComboBox();
-            ((System.ComponentModel.ISupportInitialize)(this.picMain)).BeginInit();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.picMain = new System.Windows.Forms.PictureBox();
             this.mnuFile.SuspendLayout();
-            this.panel2.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picMain)).BeginInit();
             this.SuspendLayout();
-            // 
-            // picMain
-            // 
-            this.picMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picMain.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picMain.Location = new System.Drawing.Point(5, 5);
-            this.picMain.Name = "picMain";
-            this.picMain.Size = new System.Drawing.Size(459, 459);
-            this.picMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.picMain.TabIndex = 0;
-            this.picMain.TabStop = false;
             // 
             // mnuFile
             // 
             this.mnuFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.settingToolStripMenuItem});
+            this.mnuSetting});
             this.mnuFile.Location = new System.Drawing.Point(0, 0);
             this.mnuFile.Name = "mnuFile";
             this.mnuFile.Size = new System.Drawing.Size(469, 24);
             this.mnuFile.TabIndex = 1;
             this.mnuFile.Text = "File...";
             // 
-            // fileToolStripMenuItem
+            // mnuSetting
             // 
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
-            this.fileToolStripMenuItem.Text = "&File...";
-            // 
-            // settingToolStripMenuItem
-            // 
-            this.settingToolStripMenuItem.Name = "settingToolStripMenuItem";
-            this.settingToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
-            this.settingToolStripMenuItem.Text = "&Setting";
-            // 
-            // panel2
-            // 
-            this.panel2.BackColor = System.Drawing.Color.Black;
-            this.panel2.Controls.Add(this.picMain);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel2.Location = new System.Drawing.Point(0, 58);
-            this.panel2.Name = "panel2";
-            this.panel2.Padding = new System.Windows.Forms.Padding(5);
-            this.panel2.Size = new System.Drawing.Size(469, 469);
-            this.panel2.TabIndex = 3;
+            this.mnuSetting.Name = "mnuSetting";
+            this.mnuSetting.Size = new System.Drawing.Size(59, 20);
+            this.mnuSetting.Text = "&Setting";
+            this.mnuSetting.Click += new System.EventHandler(this.settingToolStripMenuItem_Click);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.btnStart);
             this.panel1.Controls.Add(this.cbxCamera);
             this.panel1.Controls.Add(this.cbxCameras);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 24);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(469, 34);
+            this.panel1.Size = new System.Drawing.Size(469, 33);
             this.panel1.TabIndex = 4;
+            // 
+            // btnStart
+            // 
+            this.btnStart.Location = new System.Drawing.Point(382, 5);
+            this.btnStart.Name = "btnStart";
+            this.btnStart.Size = new System.Drawing.Size(75, 23);
+            this.btnStart.TabIndex = 2;
+            this.btnStart.Text = "開始";
+            this.btnStart.UseVisualStyleBackColor = true;
+            this.btnStart.Click += new System.EventHandler(this.btnStart_Click);
             // 
             // cbxCamera
             // 
             this.cbxCamera.AutoSize = true;
-            this.cbxCamera.Location = new System.Drawing.Point(12, 6);
+            this.cbxCamera.Location = new System.Drawing.Point(15, 11);
             this.cbxCamera.Name = "cbxCamera";
             this.cbxCamera.Size = new System.Drawing.Size(29, 12);
             this.cbxCamera.TabIndex = 1;
@@ -111,19 +95,50 @@ namespace CamCapture
             // cbxCameras
             // 
             this.cbxCameras.FormattingEnabled = true;
-            this.cbxCameras.Location = new System.Drawing.Point(47, 3);
+            this.cbxCameras.Location = new System.Drawing.Point(50, 8);
             this.cbxCameras.Name = "cbxCameras";
             this.cbxCameras.Size = new System.Drawing.Size(121, 20);
             this.cbxCameras.TabIndex = 0;
             this.cbxCameras.SelectedIndexChanged += new System.EventHandler(this.cbxCameras_SelectedIndexChanged);
             // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Location = new System.Drawing.Point(0, 507);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(469, 22);
+            this.statusStrip1.TabIndex = 6;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.Black;
+            this.panel2.Controls.Add(this.picMain);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 57);
+            this.panel2.Name = "panel2";
+            this.panel2.Padding = new System.Windows.Forms.Padding(5);
+            this.panel2.Size = new System.Drawing.Size(469, 450);
+            this.panel2.TabIndex = 7;
+            // 
+            // picMain
+            // 
+            this.picMain.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.picMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picMain.Location = new System.Drawing.Point(5, 5);
+            this.picMain.Name = "picMain";
+            this.picMain.Size = new System.Drawing.Size(459, 440);
+            this.picMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picMain.TabIndex = 0;
+            this.picMain.TabStop = false;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 527);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(469, 529);
             this.Controls.Add(this.panel2);
+            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.mnuFile);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -135,27 +150,27 @@ namespace CamCapture
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmMain_FormClosed);
             this.Load += new System.EventHandler(this.frmMain_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.mnuFile.ResumeLayout(false);
             this.mnuFile.PerformLayout();
-            this.panel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.PictureBox picMain;
         private System.Windows.Forms.MenuStrip mnuFile;
-        private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem settingToolStripMenuItem;
-        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.ToolStripMenuItem mnuSetting;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label cbxCamera;
         private System.Windows.Forms.ComboBox cbxCameras;
+        private System.Windows.Forms.Button btnStart;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.PictureBox picMain;
     }
 }
 

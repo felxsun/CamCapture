@@ -5,5 +5,20 @@
     <Setting Name="camIndex" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">-1</Value>
     </Setting>
+    <Setting Name="directoryVideo" Type="System.String" Scope="User">
+      <Value Profile="(Default)">video</Value>
+    </Setting>
+    <Setting Name="directoryPicture" Type="System.String" Scope="User">
+      <Value Profile="(Default)">img</Value>
+    </Setting>
+    <Setting Name="imageInterval" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="recordDuration" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1800</Value>
+    </Setting>
+    <Setting Name="videoDuration" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">600</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

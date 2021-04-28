@@ -20,8 +20,19 @@ namespace CamCapture
     {
         private Capture cap;
         public string[] cameraNames;
+
         Emgu.CV.VideoWriter vwr;
         bool inCapture;
+        int frameHeight;
+        int frameWidth;
+        int fps=0;
+        int fourcc;
+
+        private string folderImg;
+        private string folderVideo;
+        private int intervalImg;
+        private int durationRecord;
+        private int durationVideo;
 
         public frmMain()
         {
@@ -29,12 +40,13 @@ namespace CamCapture
             this.cap = null;
             this.inCapture = false;
             this.vwr = null;
-
         }
 
         
         private void frmMain_Load(object sender, EventArgs e)
         {
+            refreshSettings();
+
             this.Text = String.Format("影像定時擷取器  {0}.{1}.{2} {3}:{4}"
                 , ThisAssembly.Git.SemVer.Major
                 , ThisAssembly.Git.SemVer.Minor
@@ -113,8 +125,17 @@ namespace CamCapture
             try
             {
                 this.cap = new Capture(cameraIndex);
+                this.frameHeight = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight));
+                this.frameWidth = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth));
+                this.cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps,24);
+                this.fps = (int)this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps);
+                //this.fourcc = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FourCC));
+                this.fourcc = VideoWriter.Fourcc('X', 'V', 'I', 'D');
+
+
                 this.cap.ImageGrabbed += VideoCapture_ImageGrabbed;
                 this.cap.Start();
+                
             }
             catch(Exception ex)
             {
@@ -124,24 +145,12 @@ namespace CamCapture
         }
         private void VideoCapture_ImageGrabbed(object sender, EventArgs e)
         {
-            /*
-            if (fileChanged)
-            {
-                totalFrames = this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount);
-                fps = this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps);
-                int fourcc = Convert.ToInt32(videoCapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FourCC));
-                int frameHeight = Convert.ToInt32(videoCapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight));
-                int frameWidth = Convert.ToInt32(videoCapture.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth));
-                string destination = "C:\\Users\\ITNOA\\Desktop\\savedVideoDHS\\" + i + ".avi";
-                videoWriter = new VideoWriter(destination, VideoWriter.Fourcc('I', 'Y', 'U', 'V'), fps, new Size(frameWidth, frameHeight), true);
-                fileChanged = false;
-            }
-            /**/
-
             Mat m = new Mat();
             this.cap.Retrieve(m);
             picMain.Image = m.ToImage<Bgr, byte>().Bitmap;
-            //videoWriter.Write(m);
+            if (inCapture)
+                this.vwr.Write(m);
+
         }
 
         private void disconnectCapture()
@@ -159,6 +168,48 @@ namespace CamCapture
         {
             if (MessageBox.Show("立即結束此程式?", "影像資料定時錄製器", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 e.Cancel = true;
+        }
+
+        private void settingToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmSetting dlg = new frmSetting();
+            dlg.ShowDialog();
+            refreshSettings();
+        }
+
+        private void refreshSettings()
+        {
+            string appPath = Application.StartupPath;
+            this.folderImg = appPath + "\\" + Properties.Settings.Default.directoryPicture;
+            this.folderVideo = appPath + "\\" + Properties.Settings.Default.directoryVideo;
+            this.intervalImg = Properties.Settings.Default.imageInterval;
+            this.durationRecord = Properties.Settings.Default.recordDuration;
+            this.durationVideo = Properties.Settings.Default.videoDuration;
+        }
+
+        private void btnStart_Click(object sender, EventArgs e)
+        {
+            if (inCapture)
+            {
+                inCapture = false;
+                this.vwr.Dispose();
+                mnuSetting.Enabled = true;
+                this.btnStart.Text = "開始錄製";
+
+            }
+            else
+            {
+                //this.cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount, 0);
+                
+                string destination = "a1.avi";
+                //this.vwr = new VideoWriter(destination, VideoWriter.Fourcc('H', '2', '6', '4'), this.fps, new Size(frameWidth, frameHeight), true);
+                this.vwr = new VideoWriter(destination, this.fourcc, this.fps, new Size(frameWidth, frameHeight), true);
+                //this.vwr = new VideoWriter(destination,this.fps, new Size(frameWidth, frameHeight), true);
+                inCapture = true;
+                this.btnStart.Text = "停止錄製";
+                this.mnuSetting.Enabled = false;
+            }
+            /**/
         }
     }
 }
