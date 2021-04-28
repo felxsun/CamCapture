@@ -13,6 +13,7 @@ using Emgu.CV.Structure;
 using DirectShowLib;
 using SharpDX.MediaFoundation;
 using System.Threading;
+using System.Timers;
 
 namespace CamCapture
 {
@@ -34,12 +35,17 @@ namespace CamCapture
         private int durationRecord;
         private int durationVideo;
 
+        private System.Timers.Timer pictureTimer;
+        private 
+
         public frmMain()
         {
             InitializeComponent();
             this.cap = null;
             this.inCapture = false;
             this.vwr = null;
+            pictureTimer = new System.Timers.Timer();
+            pictureTimer.Enabled = false;
         }
 
         
@@ -210,6 +216,11 @@ namespace CamCapture
                 this.mnuSetting.Enabled = false;
             }
             /**/
+        }
+
+        private static void OnPictureTimerEvent(Object source, ElapsedEventArgs e)
+        {
+
         }
     }
 }
