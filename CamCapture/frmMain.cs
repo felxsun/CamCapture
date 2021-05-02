@@ -14,20 +14,23 @@ using DirectShowLib;
 using SharpDX.MediaFoundation;
 using System.Threading;
 using System.Timers;
+using System.IO;
 
 namespace CamCapture
 {
     public partial class frmMain : Form
     {
+        //DEFAULT Setting
+        public const int DEFAULT_FPS = 24;
         private Capture cap;
         public string[] cameraNames;
 
         Emgu.CV.VideoWriter vwr;
-        bool inCapture;
-        int frameHeight;
-        int frameWidth;
-        int fps=0;
-        int fourcc;
+        private bool inCapture;
+        private int frameHeight;
+        private int frameWidth;
+        private int fps;
+        private int fourcc;
 
         private string folderImg;
         private string folderVideo;
@@ -36,14 +39,17 @@ namespace CamCapture
         private int durationVideo;
 
         private System.Timers.Timer pictureTimer;
-        private 
-
+        private DateTime initTime;
         public frmMain()
         {
             InitializeComponent();
             this.cap = null;
             this.inCapture = false;
             this.vwr = null;
+
+            Properties.Settings.Default.fps = DEFAULT_FPS;
+
+            
             pictureTimer = new System.Timers.Timer();
             pictureTimer.Enabled = false;
         }
@@ -59,20 +65,10 @@ namespace CamCapture
                 , ThisAssembly.Git.SemVer.Patch
                 , ThisAssembly.Git.Branch
                 , ThisAssembly.Git.Commits);
-            /*
-            captures.Clear();
-            try
-            {
-                for (int i = 0; i < 20; ++i)
-                {
-                    Capture c = new  Capture(Emgu.CV.CvEnum.CaptureType.Msmf);
-                    captures.Add(c);
-                }
-            }
-            catch { }
-            /**/
+            
             this.cameraNames = ListOfAttachedCameras();
             this.cbxCameras.Items.Clear();
+
             if (this.cameraNames != null)
             {
                 for (int i = 0; i < this.cameraNames.Length; ++i)
@@ -128,15 +124,20 @@ namespace CamCapture
             if(cameraIndex<0 || this.cameraNames == null || cameraIndex >= this.cameraNames.Length)
                 return;
             
+
             try
             {
                 this.cap = new Capture(cameraIndex);
+
                 this.frameHeight = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight));
                 this.frameWidth = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth));
+                //WebCam 沒有 FPS
                 this.cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps,24);
                 this.fps = (int)this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps);
-                //this.fourcc = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FourCC));
                 this.fourcc = VideoWriter.Fourcc('X', 'V', 'I', 'D');
+
+                this.cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount, 0);
+                this.initTime = DateTime.Now;
 
 
                 this.cap.ImageGrabbed += VideoCapture_ImageGrabbed;
@@ -191,6 +192,7 @@ namespace CamCapture
             this.intervalImg = Properties.Settings.Default.imageInterval;
             this.durationRecord = Properties.Settings.Default.recordDuration;
             this.durationVideo = Properties.Settings.Default.videoDuration;
+            this.fps = Properties.Settings.Default.fps;
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -203,10 +205,9 @@ namespace CamCapture
                 this.btnStart.Text = "開始錄製";
 
             }
-            else
+            else if (initialFolder())
             {
-                //this.cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount, 0);
-                
+
                 string destination = "a1.avi";
                 //this.vwr = new VideoWriter(destination, VideoWriter.Fourcc('H', '2', '6', '4'), this.fps, new Size(frameWidth, frameHeight), true);
                 this.vwr = new VideoWriter(destination, this.fourcc, this.fps, new Size(frameWidth, frameHeight), true);
@@ -216,6 +217,35 @@ namespace CamCapture
                 this.mnuSetting.Enabled = false;
             }
             /**/
+        }
+
+        //Check and initial image folder
+        private bool initialFolder()
+        {
+            if( (Directory.Exists(this.folderImg) && Directory.GetFiles(this.folderImg).Length>0)
+                ||
+                (Directory.Exists(this.folderVideo) && Directory.GetFiles(this.folderVideo).Length>0)
+            )
+                if (MessageBox.Show("影像目錄存在且不為空目錄, 清空目錄後再繼續？", "檢查影像目錄", MessageBoxButtons.OKCancel) != DialogResult.OK)
+                    return false;
+
+            //clear and create folder
+            try
+            {
+                if (Directory.Exists(this.folderImg))
+                    Directory.Delete(this.folderImg);
+                if (Directory.Exists(this.folderVideo))
+                    Directory.Delete(this.folderVideo);
+                Directory.CreateDirectory(this.folderImg);
+                Directory.CreateDirectory(this.folderVideo);
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("建立或清理影像檔目錄失敗"+Environment.NewLine+ex.Message);
+                return false;
+            }
+            return true;
+            
         }
 
         private static void OnPictureTimerEvent(Object source, ElapsedEventArgs e)

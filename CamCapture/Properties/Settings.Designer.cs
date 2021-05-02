@@ -94,5 +94,17 @@ namespace CamCapture.Properties {
                 this["videoDuration"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("24")]
+        public int fps {
+            get {
+                return ((int)(this["fps"]));
+            }
+            set {
+                this["fps"] = value;
+            }
+        }
     }
 }
