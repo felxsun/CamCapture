@@ -31,6 +31,7 @@ namespace CamCapture
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.mnuFile = new System.Windows.Forms.MenuStrip();
+            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuSetting = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1 = new System.Windows.Forms.Panel();
             this.btnStart = new System.Windows.Forms.Button();
@@ -39,9 +40,10 @@ namespace CamCapture
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.panel2 = new System.Windows.Forms.Panel();
             this.picMain = new System.Windows.Forms.PictureBox();
-            this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.statusMessage = new System.Windows.Forms.ToolStripStatusLabel();
             this.mnuFile.SuspendLayout();
             this.panel1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).BeginInit();
             this.SuspendLayout();
@@ -56,6 +58,13 @@ namespace CamCapture
             this.mnuFile.Size = new System.Drawing.Size(469, 24);
             this.mnuFile.TabIndex = 1;
             this.mnuFile.Text = "File...";
+            // 
+            // fileToolStripMenuItem
+            // 
+            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
+            this.fileToolStripMenuItem.Text = "&File";
+            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
             // mnuSetting
             // 
@@ -105,6 +114,8 @@ namespace CamCapture
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusMessage});
             this.statusStrip1.Location = new System.Drawing.Point(0, 507);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(469, 22);
@@ -133,12 +144,11 @@ namespace CamCapture
             this.picMain.TabIndex = 0;
             this.picMain.TabStop = false;
             // 
-            // fileToolStripMenuItem
+            // statusMessage
             // 
-            this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
-            this.fileToolStripMenuItem.Text = "&File";
-            this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
+            this.statusMessage.Name = "statusMessage";
+            this.statusMessage.Size = new System.Drawing.Size(12, 17);
+            this.statusMessage.Text = "-";
             // 
             // frmMain
             // 
@@ -163,6 +173,8 @@ namespace CamCapture
             this.mnuFile.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picMain)).EndInit();
             this.ResumeLayout(false);
@@ -181,6 +193,7 @@ namespace CamCapture
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.PictureBox picMain;
         private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripStatusLabel statusMessage;
     }
 }
 

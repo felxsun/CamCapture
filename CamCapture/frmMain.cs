@@ -31,7 +31,7 @@ namespace CamCapture
         private int frameWidth;
         private int fps;
         private int fourcc;
-        private int videoCount = -1; //control video
+        
 
         private string folderImg;
         private string folderVideo;
@@ -40,8 +40,12 @@ namespace CamCapture
         private int durationVideo;
 
         private System.Timers.Timer pictureTimer;
+        private System.Timers.Timer videoTimer;
+        private System.Timers.Timer recordTimer;
+        private DateTime startStamp;
         private DateTime initTime;
         private int pictureCount;
+        private int videoCount; //control video
 
 
         public frmMain()
@@ -222,10 +226,19 @@ namespace CamCapture
                 this.btnStart.Text = "停止錄製";
                 this.mnuSetting.Enabled = false;
 
+                //picture timer
                 this.pictureTimer = new System.Timers.Timer(this.intervalImg);
                 this.pictureTimer.Elapsed += OnPictureTimerEvent;
                 this.pictureCount = 1;
                 this.pictureTimer.Start();
+                //total recoder timer
+                this.recordTimer = new System.Timers.Timer(this.durationRecord*1000);
+                this.startStamp = DateTime.Now;
+                this.recordTimer.Start();
+                //video timer
+
+
+
             }
         }
 
@@ -270,19 +283,41 @@ namespace CamCapture
             
         }
 
-        private static void OnPictureTimerEvent(Object source, ElapsedEventArgs e)
+        private void OnPictureTimerEvent(Object source, ElapsedEventArgs e)
         {
             if (!inCapture)
                 return;
 
             DateTime t = DateTime.Now;
-
-            picMain.Image.Save(this.folderImg+"\\"+this.pictureCount.ToString("000") + "_" + t.ToString("YYYYMMDD_hhmmss"));
+            savePicture(picMain, this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss")+".png");
+            ++this.pictureCount;
         }
 
+        private void onRecordTimerEvent(Object source, ElapsedEventArgs e)
+        {
+            if (!inCapture)
+                return;
+
+            this.inCapture = false;
+            this.vwr.Dispose();
+
+        }
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(Application.StartupPath);
+        }
+
+        //save image
+        delegate void savePictureCallBack(PictureBox bx, string fileName);
+        private void savePicture(PictureBox bx, string fileName)
+        {
+            if (bx.InvokeRequired)
+            {
+                savePictureCallBack d = new savePictureCallBack(savePicture);
+                this.Invoke(d, new object[] { bx, fileName });
+            }
+            else
+                picMain.Image.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
         }
     }
 }
