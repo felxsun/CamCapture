@@ -31,6 +31,7 @@ namespace CamCapture
         private int frameWidth;
         private int fps;
         private int fourcc;
+        private int videoCount = -1; //control video
 
         private string folderImg;
         private string folderVideo;
@@ -40,6 +41,9 @@ namespace CamCapture
 
         private System.Timers.Timer pictureTimer;
         private DateTime initTime;
+        private int pictureCount;
+
+
         public frmMain()
         {
             InitializeComponent();
@@ -199,6 +203,11 @@ namespace CamCapture
         {
             if (inCapture)
             {
+                this.pictureTimer.Stop();
+                this.pictureTimer.Dispose();
+                this.pictureTimer.Elapsed -= OnPictureTimerEvent;
+                this.pictureTimer = null;
+
                 inCapture = false;
                 this.vwr.Dispose();
                 mnuSetting.Enabled = true;
@@ -207,16 +216,17 @@ namespace CamCapture
             }
             else if (initialFolder())
             {
-
                 string destination = "a1.avi";
-                //this.vwr = new VideoWriter(destination, VideoWriter.Fourcc('H', '2', '6', '4'), this.fps, new Size(frameWidth, frameHeight), true);
                 this.vwr = new VideoWriter(destination, this.fourcc, this.fps, new Size(frameWidth, frameHeight), true);
-                //this.vwr = new VideoWriter(destination,this.fps, new Size(frameWidth, frameHeight), true);
                 inCapture = true;
                 this.btnStart.Text = "停止錄製";
                 this.mnuSetting.Enabled = false;
+
+                this.pictureTimer = new System.Timers.Timer(this.intervalImg);
+                this.pictureTimer.Elapsed += OnPictureTimerEvent;
+                this.pictureCount = 1;
+                this.pictureTimer.Start();
             }
-            /**/
         }
 
         //Check and initial image folder
@@ -232,12 +242,24 @@ namespace CamCapture
             //clear and create folder
             try
             {
+
                 if (Directory.Exists(this.folderImg))
-                    Directory.Delete(this.folderImg);
+                {
+                    DirectoryInfo dr = new DirectoryInfo(this.folderImg);
+                    foreach (FileInfo f in dr.GetFiles())
+                        f.Delete();
+                }
+                else
+                    Directory.CreateDirectory(this.folderImg);
+
                 if (Directory.Exists(this.folderVideo))
-                    Directory.Delete(this.folderVideo);
-                Directory.CreateDirectory(this.folderImg);
-                Directory.CreateDirectory(this.folderVideo);
+                {
+                    DirectoryInfo dr = new DirectoryInfo(this.folderVideo);
+                    foreach (FileInfo f in dr.GetFiles())
+                        f.Delete();
+                }
+                else
+                    Directory.CreateDirectory(this.folderVideo);
             }
             catch(Exception ex)
             {
@@ -250,7 +272,17 @@ namespace CamCapture
 
         private static void OnPictureTimerEvent(Object source, ElapsedEventArgs e)
         {
+            if (!inCapture)
+                return;
 
+            DateTime t = DateTime.Now;
+
+            picMain.Image.Save(this.folderImg+"\\"+this.pictureCount.ToString("000") + "_" + t.ToString("YYYYMMDD_hhmmss"));
+        }
+
+        private void fileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(Application.StartupPath);
         }
     }
 }
