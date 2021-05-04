@@ -35,6 +35,7 @@ namespace CamCapture
 
         private string folderImg;
         private string folderVideo;
+
         private int intervalImg;
         private int durationRecord;
         private int durationVideo;
@@ -42,11 +43,13 @@ namespace CamCapture
         private System.Timers.Timer pictureTimer;
         private System.Timers.Timer videoTimer;
         private System.Timers.Timer recordTimer;
+        private System.Timers.Timer frameTimer;
+
+        private Mat m;
+
         private DateTime startStamp;
         private DateTime initTime;
         private int pictureCount;
-        private int videoCount; //control video
-
 
         public frmMain()
         {
@@ -56,8 +59,6 @@ namespace CamCapture
             this.vwr = null;
 
             Properties.Settings.Default.fps = DEFAULT_FPS;
-
-            
             pictureTimer = new System.Timers.Timer();
             pictureTimer.Enabled = false;
         }
@@ -77,6 +78,15 @@ namespace CamCapture
             this.cameraNames = ListOfAttachedCameras();
             this.cbxCameras.Items.Clear();
 
+            this.pictureTimer = new System.Timers.Timer();
+            this.recordTimer = new System.Timers.Timer();
+            this.videoTimer = new System.Timers.Timer();
+            this.frameTimer = new System.Timers.Timer();
+            this.pictureTimer.Elapsed += OnPictureTimerEvent;
+            this.recordTimer.Elapsed += onRecordTimerEvent;
+            this.videoTimer.Elapsed += onVideoTimerEvent;
+            this.frameTimer.Elapsed += onFrameTimerEvent;
+
             if (this.cameraNames != null)
             {
                 for (int i = 0; i < this.cameraNames.Length; ++i)
@@ -84,6 +94,8 @@ namespace CamCapture
 
                 this.cbxCameras.SelectedIndex = 0;
             }
+
+            this.m = new Mat();
         }
 
         private void frmMain_FormClosed(object sender, FormClosedEventArgs e)
@@ -160,12 +172,10 @@ namespace CamCapture
         }
         private void VideoCapture_ImageGrabbed(object sender, EventArgs e)
         {
-            Mat m = new Mat();
             this.cap.Retrieve(m);
             picMain.Image = m.ToImage<Bgr, byte>().Bitmap;
-            if (inCapture)
-                this.vwr.Write(m);
-
+            string duration = (DateTime.Now - this.startStamp).TotalSeconds.ToString("0");
+            statusMessage.Text = (inCapture)? String.Format("錄製中,應錄{2}秒,己錄{0}秒,己擷取{1}照片",duration ,this.pictureCount,this.durationRecord) : "-";
         }
 
         private void disconnectCapture()
@@ -181,7 +191,7 @@ namespace CamCapture
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (MessageBox.Show("立即結束此程式?", "影像資料定時錄製器", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            if (this.inCapture || MessageBox.Show("立即結束此程式?", "影像資料定時錄製器", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 e.Cancel = true;
         }
 
@@ -207,38 +217,45 @@ namespace CamCapture
         {
             if (inCapture)
             {
-                this.pictureTimer.Stop();
-                this.pictureTimer.Dispose();
-                this.pictureTimer.Elapsed -= OnPictureTimerEvent;
-                this.pictureTimer = null;
-
                 inCapture = false;
-                this.vwr.Dispose();
+
+                this.pictureTimer.Stop();
+                this.recordTimer.Stop();
+                this.videoTimer.Stop();
+                this.frameTimer.Stop();
+
+                
+                if(this.vwr!=null)
+                    this.vwr.Dispose();
                 mnuSetting.Enabled = true;
+                this.cbxCameras.Enabled = true;
                 this.btnStart.Text = "開始錄製";
+                this.vwr = null;
 
             }
             else if (initialFolder())
             {
-                string destination = "a1.avi";
-                this.vwr = new VideoWriter(destination, this.fourcc, this.fps, new Size(frameWidth, frameHeight), true);
-                inCapture = true;
                 this.btnStart.Text = "停止錄製";
                 this.mnuSetting.Enabled = false;
+                this.cbxCameras.Enabled = false;
 
                 //picture timer
-                this.pictureTimer = new System.Timers.Timer(this.intervalImg);
-                this.pictureTimer.Elapsed += OnPictureTimerEvent;
+                this.pictureTimer.Interval=this.intervalImg;
                 this.pictureCount = 1;
-                this.pictureTimer.Start();
                 //total recoder timer
-                this.recordTimer = new System.Timers.Timer(this.durationRecord*1000);
+                this.recordTimer.Interval=this.durationRecord*1000;
                 this.startStamp = DateTime.Now;
-                this.recordTimer.Start();
+                //frame timer
+                this.frameTimer.Interval = 1000.0f / this.fps;
                 //video timer
+                this.videoTimer.Interval = this.durationVideo * 1000;
 
-
-
+                inCapture = true;
+                this.pictureTimer.Start();
+                this.recordTimer.Start();
+                this.frameTimer.Start();
+                this.videoTimer.Start();
+                this.startStamp = DateTime.Now;
             }
         }
 
@@ -295,13 +312,41 @@ namespace CamCapture
 
         private void onRecordTimerEvent(Object source, ElapsedEventArgs e)
         {
-            if (!inCapture)
-                return;
-
-            this.inCapture = false;
-            this.vwr.Dispose();
+            throw new Exception("ToDo: RecordTimerEvent");
 
         }
+
+        private void onVideoTimerEvent(Object source, ElapsedEventArgs e)
+        {
+            if (!inCapture)
+                return;
+            if (this.vwr != null)
+                this.vwr = null;
+        }
+
+        private void onFrameTimerEvent(Object source, ElapsedEventArgs e)
+        {
+            if (!inCapture)
+                return;
+            if(this.vwr==null)
+            {
+                this.vwr = new VideoWriter(
+                    this.folderVideo+"\\"+DateTime.Now.ToString("yyyyMMdd_hhmmss")+".mp4",
+                    this.fourcc,
+                    this.fps,
+                    new Size(frameWidth, frameHeight),
+                    true
+                );
+            }
+            else 
+                this.vwr.Write(m);
+        }
+
+        /// <summary>
+        /// 開啟檔案管理員 顯示資料檔根目錄
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             System.Diagnostics.Process.Start(Application.StartupPath);
@@ -318,6 +363,19 @@ namespace CamCapture
             }
             else
                 picMain.Image.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
+        }
+
+        //save video frmae
+        delegate void addFrameCallBack(PictureBox bx, string fileName);
+        private void addFrame(PictureBox bx, string fileName)
+        {
+            if (bx.InvokeRequired)
+            {
+                addFrameCallBack d = new addFrameCallBack(addFrame);
+                this.Invoke(d, new object[] { bx, fileName });
+            }
+            else
+                throw new Exception("ToDo: addFrame operation");
         }
     }
 }

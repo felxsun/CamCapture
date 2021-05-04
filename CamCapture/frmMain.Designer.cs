@@ -38,9 +38,9 @@ namespace CamCapture
             this.cbxCamera = new System.Windows.Forms.Label();
             this.cbxCameras = new System.Windows.Forms.ComboBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.statusMessage = new System.Windows.Forms.ToolStripStatusLabel();
             this.panel2 = new System.Windows.Forms.Panel();
             this.picMain = new System.Windows.Forms.PictureBox();
-            this.statusMessage = new System.Windows.Forms.ToolStripStatusLabel();
             this.mnuFile.SuspendLayout();
             this.panel1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -62,15 +62,15 @@ namespace CamCapture
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(38, 20);
-            this.fileToolStripMenuItem.Text = "&File";
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(97, 20);
+            this.fileToolStripMenuItem.Text = "&F開啟資料目錄";
             this.fileToolStripMenuItem.Click += new System.EventHandler(this.fileToolStripMenuItem_Click);
             // 
             // mnuSetting
             // 
             this.mnuSetting.Name = "mnuSetting";
-            this.mnuSetting.Size = new System.Drawing.Size(59, 20);
-            this.mnuSetting.Text = "&Setting";
+            this.mnuSetting.Size = new System.Drawing.Size(50, 20);
+            this.mnuSetting.Text = "&S設定";
             this.mnuSetting.Click += new System.EventHandler(this.settingToolStripMenuItem_Click);
             // 
             // panel1
@@ -105,10 +105,11 @@ namespace CamCapture
             // 
             // cbxCameras
             // 
+            this.cbxCameras.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbxCameras.FormattingEnabled = true;
             this.cbxCameras.Location = new System.Drawing.Point(50, 8);
             this.cbxCameras.Name = "cbxCameras";
-            this.cbxCameras.Size = new System.Drawing.Size(121, 20);
+            this.cbxCameras.Size = new System.Drawing.Size(244, 20);
             this.cbxCameras.TabIndex = 0;
             this.cbxCameras.SelectedIndexChanged += new System.EventHandler(this.cbxCameras_SelectedIndexChanged);
             // 
@@ -121,6 +122,12 @@ namespace CamCapture
             this.statusStrip1.Size = new System.Drawing.Size(469, 22);
             this.statusStrip1.TabIndex = 6;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // statusMessage
+            // 
+            this.statusMessage.Name = "statusMessage";
+            this.statusMessage.Size = new System.Drawing.Size(12, 17);
+            this.statusMessage.Text = "-";
             // 
             // panel2
             // 
@@ -144,12 +151,6 @@ namespace CamCapture
             this.picMain.TabIndex = 0;
             this.picMain.TabStop = false;
             // 
-            // statusMessage
-            // 
-            this.statusMessage.Name = "statusMessage";
-            this.statusMessage.Size = new System.Drawing.Size(12, 17);
-            this.statusMessage.Text = "-";
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -163,6 +164,7 @@ namespace CamCapture
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.mnuFile;
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "影像資料定時錄製器";
