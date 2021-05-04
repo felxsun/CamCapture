@@ -217,21 +217,7 @@ namespace CamCapture
         {
             if (inCapture)
             {
-                inCapture = false;
-
-                this.pictureTimer.Stop();
-                this.recordTimer.Stop();
-                this.videoTimer.Stop();
-                this.frameTimer.Stop();
-
-                
-                if(this.vwr!=null)
-                    this.vwr.Dispose();
-                mnuSetting.Enabled = true;
-                this.cbxCameras.Enabled = true;
-                this.btnStart.Text = "開始錄製";
-                this.vwr = null;
-
+                stopRecording();
             }
             else if (initialFolder())
             {
@@ -257,6 +243,26 @@ namespace CamCapture
                 this.videoTimer.Start();
                 this.startStamp = DateTime.Now;
             }
+        }
+
+        private void stopRecording()
+        {
+            inCapture = false;
+
+            this.pictureTimer.Stop();
+            this.recordTimer.Stop();
+            this.videoTimer.Stop();
+            this.frameTimer.Stop();
+
+
+            if (this.vwr != null)
+                this.vwr = null;
+
+            enManuStrip(mnuFile);
+            enCbxCamer(this.cbxCameras);
+
+            
+            setButtonText(btnStart,"開始錄製");
         }
 
         //Check and initial image folder
@@ -312,8 +318,8 @@ namespace CamCapture
 
         private void onRecordTimerEvent(Object source, ElapsedEventArgs e)
         {
-            throw new Exception("ToDo: RecordTimerEvent");
-
+            stopRecording();
+            MessageBox.Show("錄製完成");
         }
 
         private void onVideoTimerEvent(Object source, ElapsedEventArgs e)
@@ -377,6 +383,46 @@ namespace CamCapture
             else
                 throw new Exception("ToDo: addFrame operation");
         }
+
+        //enable setting mnu
+        delegate void enManuStripCallBack(MenuStrip ms);
+        private void enManuStrip(MenuStrip ms)
+        {
+            if (ms.InvokeRequired)
+            {
+                enManuStripCallBack d = new enManuStripCallBack(enManuStrip);
+                this.Invoke(d, new object[] { ms });
+            }
+            else
+                mnuSetting.Enabled = true;
+        }
+
+        //enable setting mnu
+        delegate void enCbxCamerCallBack(ComboBox bx);
+        private void enCbxCamer(ComboBox bx)
+        {
+            if (bx.InvokeRequired)
+            {
+                enCbxCamerCallBack d = new enCbxCamerCallBack(enCbxCamer);
+                this.Invoke(d, new object[] { bx });
+            }
+            else
+                bx.Enabled = true;
+        }
+
+        //enable setting mnu
+        delegate void setButtonTextCallBack(Button btn, string txt);
+        private void setButtonText(Button btn, string txt)
+        {
+            if (btn.InvokeRequired)
+            {
+                setButtonTextCallBack d = new setButtonTextCallBack(setButtonText);
+                this.Invoke(d, new object[] { btn, txt });
+            }
+            else
+                btn.Text = txt;
+        }
+
     }
 }
 
