@@ -352,7 +352,11 @@ namespace CamCapture
                 return;
 
             DateTime t = DateTime.Now;
-            savePicture(picMain, this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss")+".png");
+            //savePicture(picMain, this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss")+".png");
+            Bitmap ti= this.m.ToImage<Bgr, byte>().Bitmap;
+            ti.Save(
+                this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss") + ".png"
+                , System.Drawing.Imaging.ImageFormat.Png);
             ++this.pictureCount;
         }
 
