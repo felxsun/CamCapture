@@ -31,6 +31,11 @@ namespace CamCapture
         private int frameWidth;
         private int fps;
         private int fourcc;
+
+        //naviagtion
+        private Rectangle boxHead;
+        private MCvScalar navBoxCvColor;
+        private Color navBoxColor;
         
 
         private string folderImg;
@@ -61,9 +66,10 @@ namespace CamCapture
             Properties.Settings.Default.fps = DEFAULT_FPS;
             pictureTimer = new System.Timers.Timer();
             pictureTimer.Enabled = false;
+            boxHead = Rectangle.Empty;
+            navBoxColor = Color.Yellow;
         }
 
-        
         private void frmMain_Load(object sender, EventArgs e)
         {
             refreshSettings();
@@ -131,6 +137,28 @@ namespace CamCapture
             return cameras.ToArray();
         }
 
+        public Rectangle getNavBoxHead(int iWidth, int iHeight, float bxTop, float bxWidth, float bxHeight)
+        {
+            try
+            {
+                int tTop = (int)(iHeight * bxTop);
+                int tWidth = (int)(bxWidth * iWidth);
+                int tHeight = (int)(bxHeight * iHeight);
+                int tX = (int)((iWidth - tWidth) / 2);
+
+                return new Rectangle(tX, tTop, tWidth, tHeight);
+            }
+            catch
+            {
+                return Rectangle.Empty;
+            }
+        }
+
+        public MCvScalar genNavBoxColor(Color c)
+        {
+            return new MCvScalar( c.B,  c.G,c.R,0);
+        }
+
         private void cbxCameras_SelectedIndexChanged(object sender, EventArgs e)
         {
             ComboBox bx = (ComboBox)sender;
@@ -151,6 +179,16 @@ namespace CamCapture
 
                 this.frameHeight = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight));
                 this.frameWidth = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth));
+
+                this.navBoxCvColor = this.genNavBoxColor(this.navBoxColor);
+                
+                this.boxHead = this.getNavBoxHead(
+                    this.frameWidth
+                    ,this.frameHeight
+                    ,Properties.Settings.Default.boxTop
+                    ,Properties.Settings.Default.boxWidth
+                    ,Properties.Settings.Default.boxHeight
+                    );
                 //WebCam 沒有 FPS
                 this.cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps,24);
                 this.fps = (int)this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps);
@@ -173,7 +211,9 @@ namespace CamCapture
         private void VideoCapture_ImageGrabbed(object sender, EventArgs e)
         {
             this.cap.Retrieve(m);
-            picMain.Image = m.ToImage<Bgr, byte>().Bitmap;
+            Mat t = m.Clone();
+            CvInvoke.Rectangle(t, this.boxHead, this.navBoxCvColor);
+            picMain.Image = t.ToImage<Bgr, byte>().Bitmap;
             string duration = (DateTime.Now - this.startStamp).TotalSeconds.ToString("0");
             statusMessage.Text = (inCapture)? String.Format("錄製中,應錄{2}秒,己錄{0}秒,己擷取{1}照片",duration ,this.pictureCount,this.durationRecord) : "-";
         }

@@ -106,5 +106,41 @@ namespace CamCapture.Properties {
                 this["fps"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.5")]
+        public float boxWidth {
+            get {
+                return ((float)(this["boxWidth"]));
+            }
+            set {
+                this["boxWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.6")]
+        public float boxHeight {
+            get {
+                return ((float)(this["boxHeight"]));
+            }
+            set {
+                this["boxHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.05")]
+        public float boxTop {
+            get {
+                return ((float)(this["boxTop"]));
+            }
+            set {
+                this["boxTop"] = value;
+            }
+        }
     }
 }
