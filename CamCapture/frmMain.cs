@@ -49,6 +49,9 @@ namespace CamCapture
         private System.Timers.Timer videoTimer;
         private System.Timers.Timer recordTimer;
         private System.Timers.Timer frameTimer;
+        private System.Timers.Timer countDownTimer;
+
+        private int countDownCounter=0;
 
         private Mat m;
 
@@ -88,10 +91,12 @@ namespace CamCapture
             this.recordTimer = new System.Timers.Timer();
             this.videoTimer = new System.Timers.Timer();
             this.frameTimer = new System.Timers.Timer();
+            this.countDownTimer = new System.Timers.Timer();
             this.pictureTimer.Elapsed += OnPictureTimerEvent;
             this.recordTimer.Elapsed += onRecordTimerEvent;
             this.videoTimer.Elapsed += onVideoTimerEvent;
             this.frameTimer.Elapsed += onFrameTimerEvent;
+            this.countDownTimer.Elapsed += onCountDownTimerEvent;
 
             if (this.cameraNames != null)
             {
@@ -212,7 +217,18 @@ namespace CamCapture
         {
             this.cap.Retrieve(m);
             Mat t = m.Clone();
+            //frame
             CvInvoke.Rectangle(t, this.boxHead, this.navBoxCvColor);
+            //countdown timer
+            if (this.countDownCounter > 0)
+                CvInvoke.PutText(t
+                    , this.countDownCounter.ToString()
+                    , new Point(60, 60)
+                    , Emgu.CV.CvEnum.FontFace.HersheySimplex
+                    , 2.0
+                    , new Bgr(Color.White).MCvScalar
+                    , 4);
+
             picMain.Image = t.ToImage<Bgr, byte>().Bitmap;
             string duration = (DateTime.Now - this.startStamp).TotalSeconds.ToString("0");
             statusMessage.Text = (inCapture)? String.Format("錄製中,應錄{2}秒,己錄{0}秒,己擷取{1}照片",duration ,this.pictureCount,this.durationRecord) : "-";
@@ -251,6 +267,14 @@ namespace CamCapture
             this.durationRecord = Properties.Settings.Default.recordDuration;
             this.durationVideo = Properties.Settings.Default.videoDuration;
             this.fps = Properties.Settings.Default.fps;
+
+            this.boxHead = this.getNavBoxHead(
+                    this.frameWidth
+                    , this.frameHeight
+                    , Properties.Settings.Default.boxTop
+                    , Properties.Settings.Default.boxWidth
+                    , Properties.Settings.Default.boxHeight
+                    );
         }
 
         private void btnStart_Click(object sender, EventArgs e)
@@ -275,12 +299,18 @@ namespace CamCapture
                 this.frameTimer.Interval = 1000.0f / this.fps;
                 //video timer
                 this.videoTimer.Interval = this.durationVideo * 1000;
+                //count down
+                this.countDownTimer.Interval = 1000;
+                this.countDownCounter = (int)Properties.Settings.Default.countDown;
+
+
 
                 inCapture = true;
                 this.pictureTimer.Start();
                 this.recordTimer.Start();
                 this.frameTimer.Start();
                 this.videoTimer.Start();
+                this.countDownTimer.Start();
                 this.startStamp = DateTime.Now;
             }
         }
@@ -293,6 +323,7 @@ namespace CamCapture
             this.recordTimer.Stop();
             this.videoTimer.Stop();
             this.frameTimer.Stop();
+            this.countDownTimer.Stop();
 
 
             if (this.vwr != null)
@@ -392,6 +423,13 @@ namespace CamCapture
                 this.vwr.Write(m);
         }
 
+        private void onCountDownTimerEvent(Object source, ElapsedEventArgs e)
+        {
+            if (!inCapture || this.countDownCounter<=0)
+                return;
+            --this.countDownCounter;
+        }
+
         /// <summary>
         /// 開啟檔案管理員 顯示資料檔根目錄
         /// </summary>
@@ -466,7 +504,6 @@ namespace CamCapture
             else
                 btn.Text = txt;
         }
-
     }
 }
 

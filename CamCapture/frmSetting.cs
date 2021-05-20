@@ -52,6 +52,33 @@ namespace CamCapture
             {
                 this.numRecordDuration.Value = 1800;
             }
+
+            try
+            {
+                this.numFrameWidth.Value = (Decimal) Properties.Settings.Default.boxWidth;
+            }
+            catch
+            {
+                this.numFrameWidth.Value = 0.6M;
+            }
+
+            try
+            {
+                this.numFrameHeight.Value = (Decimal)Properties.Settings.Default.boxHeight;
+            }
+            catch
+            {
+                this.numFrameHeight.Value = 0.6M;
+            }
+
+            try
+            {
+                this.numCountDown.Value = Properties.Settings.Default.countDown;
+            }
+            catch
+            {
+                this.numCountDown.Value = 10;
+            }
         }
 
         private void frmSetting_FormClosing(object sender, FormClosingEventArgs e)
@@ -63,6 +90,9 @@ namespace CamCapture
                 Properties.Settings.Default.imageInterval = (int)this.numImageInterval.Value;
                 Properties.Settings.Default.recordDuration = (int)this.numRecordDuration.Value;
                 Properties.Settings.Default.videoDuration = (int)this.numVideoDuration.Value;
+                Properties.Settings.Default.boxWidth = (float)this.numFrameWidth.Value;
+                Properties.Settings.Default.boxHeight = (float)this.numFrameHeight.Value;
+                Properties.Settings.Default.countDown = (int)this.numCountDown.Value;
                 Properties.Settings.Default.Save();
             }
             else

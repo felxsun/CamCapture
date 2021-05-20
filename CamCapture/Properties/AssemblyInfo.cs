@@ -36,7 +36,8 @@ using System.Runtime.InteropServices;
 //[assembly: AssemblyFileVersion("1.0.0.0")]
 
 //只能都是數字
-[assembly: AssemblyVersion(ThisAssembly.Git.BaseVersion.Major 
+[assembly: AssemblyVersion(
+	ThisAssembly.Git.BaseVersion.Major 
     + "."+ThisAssembly.Git.BaseVersion.Minor
     + "."+ThisAssembly.Git.BaseVersion.Patch)]
 
@@ -48,6 +49,8 @@ using System.Runtime.InteropServices;
 	ThisAssembly.Git.Commit + "@" +
 	ThisAssembly.Git.CommitDate)]
 
-[assembly: AssemblyFileVersion(ThisAssembly.Git.SemVer.Major 
-	+ "." + ThisAssembly.Git.SemVer.Minor 
-	+ "." + ThisAssembly.Git.SemVer.Patch)]
+[assembly: AssemblyFileVersion(
+    ThisAssembly.Git.SemVer.Major +
+    "." + ThisAssembly.Git.SemVer.Minor 
+	+ "." + ThisAssembly.Git.SemVer.Patch
+	+ "." + ThisAssembly.Git.Commit)]

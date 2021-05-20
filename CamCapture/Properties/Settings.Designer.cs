@@ -142,5 +142,17 @@ namespace CamCapture.Properties {
                 this["boxTop"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int countDown {
+            get {
+                return ((int)(this["countDown"]));
+            }
+            set {
+                this["countDown"] = value;
+            }
+        }
     }
 }
