@@ -39,18 +39,19 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion(
 	ThisAssembly.Git.BaseVersion.Major 
     + "."+ThisAssembly.Git.BaseVersion.Minor
-    + "."+ThisAssembly.Git.BaseVersion.Patch)]
+    + "."+ThisAssembly.Git.BaseVersion.Patch
+	+ "."+ThisAssembly.Git.Commits)]
 
 [assembly: AssemblyInformationalVersion(
 	ThisAssembly.Git.SemVer.Major + "." +
 	ThisAssembly.Git.SemVer.Minor + "." +
-	ThisAssembly.Git.Commits + "-" +
-	ThisAssembly.Git.Branch + "+" +
+	ThisAssembly.Git.SemVer.Patch + "-" +
+	ThisAssembly.Git.Branch + ":" +
 	ThisAssembly.Git.Commit + "@" +
 	ThisAssembly.Git.CommitDate)]
 
 [assembly: AssemblyFileVersion(
-    ThisAssembly.Git.SemVer.Major +
-    "." + ThisAssembly.Git.SemVer.Minor 
+    ThisAssembly.Git.SemVer.Major
+    + "." + ThisAssembly.Git.SemVer.Minor 
 	+ "." + ThisAssembly.Git.SemVer.Patch
 	+ "." + ThisAssembly.Git.Commit)]
