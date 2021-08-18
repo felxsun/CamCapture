@@ -15,7 +15,7 @@
       <Value Profile="(Default)">1000</Value>
     </Setting>
     <Setting Name="recordDuration" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">1800</Value>
+      <Value Profile="(Default)">3600</Value>
     </Setting>
     <Setting Name="videoDuration" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">600</Value>
@@ -24,7 +24,7 @@
       <Value Profile="(Default)">24</Value>
     </Setting>
     <Setting Name="boxWidth" Type="System.Single" Scope="User">
-      <Value Profile="(Default)">0.5</Value>
+      <Value Profile="(Default)">0.6</Value>
     </Setting>
     <Setting Name="boxHeight" Type="System.Single" Scope="User">
       <Value Profile="(Default)">0.6</Value>
