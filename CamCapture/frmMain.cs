@@ -78,9 +78,9 @@ namespace CamCapture
             refreshSettings();
 
             this.Text = String.Format("影像定時擷取器  {0}.{1}.{2} {3}:{4}"
-                , ThisAssembly.Git.SemVer.Major
-                , ThisAssembly.Git.SemVer.Minor
-                , ThisAssembly.Git.SemVer.Patch
+                , ThisAssembly.Git.BaseVersion.Major
+                , ThisAssembly.Git.BaseVersion.Minor
+                , ThisAssembly.Git.BaseVersion.Patch
                 , ThisAssembly.Git.Branch
                 , ThisAssembly.Git.Commits);
             
@@ -381,13 +381,22 @@ namespace CamCapture
         {
             if (!inCapture)
                 return;
+            try
+            {
 
-            DateTime t = DateTime.Now;
-            //savePicture(picMain, this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss")+".png");
-            Bitmap ti= this.m.ToImage<Bgr, byte>().Bitmap;
-            ti.Save(
-                this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss") + ".png"
-                , System.Drawing.Imaging.ImageFormat.Png);
+                DateTime t = DateTime.Now;
+                //savePicture(picMain, this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss")+".png");
+                Bitmap ti = this.m.ToImage<Bgr, byte>().Bitmap;
+                ti.Save(
+                    this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss") + ".png"
+                    , System.Drawing.Imaging.ImageFormat.Png);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed on frame image");
+                throw new Exception("Failed on frame image");
+            }
+
             ++this.pictureCount;
         }
 
@@ -409,18 +418,36 @@ namespace CamCapture
         {
             if (!inCapture)
                 return;
-            if(this.vwr==null)
+
+            if (this.vwr == null)
             {
-                this.vwr = new VideoWriter(
-                    this.folderVideo+"\\"+DateTime.Now.ToString("yyyyMMdd_hhmmss")+".mp4",
-                    this.fourcc,
-                    this.fps,
-                    new Size(frameWidth, frameHeight),
-                    true
-                );
+                try
+                {
+                    this.vwr = new VideoWriter(
+                        this.folderVideo + "\\" + DateTime.Now.ToString("yyyyMMdd_hhmmss") + ".mp4",
+                        this.fourcc,
+                        this.fps,
+                        new Size(frameWidth, frameHeight),
+                        true
+                    );
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Failed on new video fragment");
+                    throw new Exception("Failed on new video fragment");
+                }
+
             }
-            else 
+           
+            try
+            {
                 this.vwr.Write(m);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Failed on write Frame");
+                throw new Exception("Failed on write Frame");
+            }
         }
 
         private void onCountDownTimerEvent(Object source, ElapsedEventArgs e)
