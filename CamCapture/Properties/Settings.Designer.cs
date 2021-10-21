@@ -73,7 +73,7 @@ namespace CamCapture.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3600")]
+        [global::System.Configuration.DefaultSettingValueAttribute("2400")]
         public int recordDuration {
             get {
                 return ((int)(this["recordDuration"]));

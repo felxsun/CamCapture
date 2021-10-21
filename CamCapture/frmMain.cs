@@ -58,6 +58,7 @@ namespace CamCapture
         private DateTime startStamp;
         private DateTime initTime;
         private int pictureCount;
+        private int pictureSecond;
 
         public frmMain()
         {
@@ -288,9 +289,11 @@ namespace CamCapture
                 this.btnStart.Text = "停止錄製";
                 this.mnuSetting.Enabled = false;
                 this.cbxCameras.Enabled = false;
+                this.pictureSecond = DateTime.Now.Second;
 
                 //picture timer
-                this.pictureTimer.Interval=this.intervalImg;
+                //this.pictureTimer.Interval=this.intervalImg;
+                this.pictureTimer.Interval = this.intervalImg/10; //10倍速檢測
                 this.pictureCount = 1;
                 //total recoder timer
                 this.recordTimer.Interval=this.durationRecord*1000;
@@ -379,17 +382,23 @@ namespace CamCapture
 
         private void OnPictureTimerEvent(Object source, ElapsedEventArgs e)
         {
-            if (!inCapture)
+            //用以計秒
+            int tSecod = DateTime.Now.Second;
+            if (!inCapture || this.pictureSecond==tSecod) //換秒後才能再做
                 return;
+
             try
             {
 
                 DateTime t = DateTime.Now;
                 //savePicture(picMain, this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss")+".png");
                 Bitmap ti = this.m.ToImage<Bgr, byte>().Bitmap;
+                //2021 1021 : 變更counter為四位數
                 ti.Save(
-                    this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss") + ".png"
+                    this.folderImg + "\\" + this.pictureCount.ToString("0000") + "_" + t.ToString("yyyyMMdd_hhmmss") + ".png"
                     , System.Drawing.Imaging.ImageFormat.Png);
+
+                this.pictureSecond = tSecod;
             }
             catch (Exception ex)
             {
