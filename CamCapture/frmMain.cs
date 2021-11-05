@@ -387,6 +387,7 @@ namespace CamCapture
             if (!inCapture || this.pictureSecond==tSecod) //換秒後才能再做
                 return;
 
+            string fileName=null;
             try
             {
 
@@ -394,16 +395,23 @@ namespace CamCapture
                 //savePicture(picMain, this.folderImg + "\\" + this.pictureCount.ToString("000") + "_" + t.ToString("yyyyMMdd_hhmmss")+".png");
                 Bitmap ti = this.m.ToImage<Bgr, byte>().Bitmap;
                 //2021 1021 : 變更counter為四位數
-                ti.Save(
-                    this.folderImg + "\\" + this.pictureCount.ToString("0000") + "_" + t.ToString("yyyyMMdd_hhmmss") + ".png"
-                    , System.Drawing.Imaging.ImageFormat.Png);
-
+                fileName = this.folderImg + "\\" + this.pictureCount.ToString("0000") + "_" + t.ToString("yyyyMMdd_hhmmss") + ".png";
+                ti.Save(fileName, System.Drawing.Imaging.ImageFormat.Png);
                 this.pictureSecond = tSecod;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Failed on frame image");
-                throw new Exception("Failed on frame image");
+                //避免中斷流程,改在status bar上顯示
+                //同時刪除出錯的影像檔
+                //MessageBox.Show("Failed on frame image");
+                //throw new Exception("Failed on frame image");
+                try
+                {
+                    if (fileName != null) File.Delete(fileName);
+                }
+                catch { }
+
+                this.statusMessage.Text = ex.Message;
             }
 
             ++this.pictureCount;
