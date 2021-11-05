@@ -293,7 +293,7 @@ namespace CamCapture
 
                 //picture timer
                 //this.pictureTimer.Interval=this.intervalImg;
-                this.pictureTimer.Interval = this.intervalImg/10; //10倍速檢測
+                this.pictureTimer.Interval = this.intervalImg/3; //2021_11_05_改3倍速檢測
                 this.pictureCount = 1;
                 //total recoder timer
                 this.recordTimer.Interval=this.durationRecord*1000;
