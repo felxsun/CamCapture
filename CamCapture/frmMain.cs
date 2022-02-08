@@ -177,17 +177,25 @@ namespace CamCapture
             disconnectCapture();
             if(cameraIndex<0 || this.cameraNames == null || cameraIndex >= this.cameraNames.Length)
                 return;
-            
 
+#if DEBUG
+            string traceLog = "trace.log";
+#endif
             try
             {
+#if DEBUG
+                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\topen capture\n");
+#endif
                 this.cap = new Capture(cameraIndex);
 
+#if DEBUG
+                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tset NavBox\n");
+#endif
                 this.frameHeight = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight));
                 this.frameWidth = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth));
 
                 this.navBoxCvColor = this.genNavBoxColor(this.navBoxColor);
-                
+      
                 this.boxHead = this.getNavBoxHead(
                     this.frameWidth
                     ,this.frameHeight
@@ -195,20 +203,41 @@ namespace CamCapture
                     ,Properties.Settings.Default.boxWidth
                     ,Properties.Settings.Default.boxHeight
                     );
+#if DEBUG
+                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tset FPS\n");
+#endif
                 //WebCam 沒有 FPS
                 this.cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps,24);
+#if DEBUG
+                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tget FPS\n");
+#endif
                 this.fps = (int)this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps);
+#if DEBUG
+                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tset video format as XVID\n");
+#endif
                 this.fourcc = VideoWriter.Fourcc('X', 'V', 'I', 'D');
 
+#if DEBUG
+                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tset frameCount\n");
+#endif
                 this.cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount, 0);
                 this.initTime = DateTime.Now;
 
-
+#if DEBUG
+                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tset image grab event handler\n");
+#endif
                 this.cap.ImageGrabbed += VideoCapture_ImageGrabbed;
+#if DEBUG
+                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tstart to do capture\n");
+#endif
                 this.cap.Start();
-                
+
+#if DEBUG
+                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tCapture started successfully\n");
+#endif
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 disconnectCapture();
                 MessageBox.Show("Failed to link camear" + Environment.NewLine + ex.Message);
@@ -216,6 +245,9 @@ namespace CamCapture
         }
         private void VideoCapture_ImageGrabbed(object sender, EventArgs e)
         {
+#if DEBUG
+            File.AppendAllText("trace.log", DateTime.Now.ToString() + "\tgrab image\n");
+#endif
             this.cap.Retrieve(m);
             Mat t = m.Clone();
             //frame
