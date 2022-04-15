@@ -248,21 +248,44 @@ namespace CamCapture
 #if DEBUG
             File.AppendAllText("trace.log", DateTime.Now.ToString() + "\tgrab image\n");
 #endif
-            this.cap.Retrieve(m);
-            Mat t = m.Clone();
-            //frame
-            CvInvoke.Rectangle(t, this.boxHead, this.navBoxCvColor);
-            //countdown timer
-            if (this.countDownCounter > 0)
-                CvInvoke.PutText(t
-                    , this.countDownCounter.ToString()
-                    , new Point(60, 60)
-                    , Emgu.CV.CvEnum.FontFace.HersheySimplex
-                    , 2.0
-                    , new Bgr(Color.White).MCvScalar
-                    , 4);
 
-            picMain.Image = t.ToImage<Bgr, byte>().Bitmap;
+            try
+            {
+                this.cap.Retrieve(m);
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                File.AppendAllText("trace.log", DateTime.Now.ToString() + "\t image capture : "+ex.Message+"\n");
+#endif
+                MessageBox.Show("Fatal error : " + ex.Message);
+            }
+
+            try
+            {
+                Mat t = m.Clone();
+                //frame
+                CvInvoke.Rectangle(t, this.boxHead, this.navBoxCvColor);
+                //countdown timer
+                if (this.countDownCounter > 0)
+                    CvInvoke.PutText(t
+                        , this.countDownCounter.ToString()
+                        , new Point(60, 60)
+                        , Emgu.CV.CvEnum.FontFace.HersheySimplex
+                        , 2.0
+                        , new Bgr(Color.White).MCvScalar
+                        , 4);
+
+                picMain.Image = t.ToImage<Bgr, byte>().Bitmap;
+            }
+            catch (Exception ex)
+            {
+#if DEBUG
+                File.AppendAllText("trace.log", DateTime.Now.ToString() + "\t Image Rander : " + ex.Message + "\n");
+#endif
+                MessageBox.Show("Fatal error : " + ex.Message);
+            }
+
             string duration = (DateTime.Now - this.startStamp).TotalSeconds.ToString("0");
             statusMessage.Text = (inCapture)? String.Format("錄製中,應錄{2}秒,己錄{0}秒,己擷取{1}照片",duration ,this.pictureCount,this.durationRecord) : "-";
         }
