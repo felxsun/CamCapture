@@ -178,18 +178,15 @@ namespace CamCapture
             if(cameraIndex<0 || this.cameraNames == null || cameraIndex >= this.cameraNames.Length)
                 return;
 
-#if DEBUG
-            string traceLog = "trace.log";
-#endif
             try
             {
 #if DEBUG
-                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\topen capture\n");
+                tryAppendLog(DateTime.Now.ToString() + "\topen capture\n");
 #endif
                 this.cap = new Capture(cameraIndex);
 
 #if DEBUG
-                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tset NavBox\n");
+                tryAppendLog(DateTime.Now.ToString() + "\tset NavBox\n");
 #endif
                 this.frameHeight = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameHeight));
                 this.frameWidth = Convert.ToInt32(this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameWidth));
@@ -204,36 +201,36 @@ namespace CamCapture
                     ,Properties.Settings.Default.boxHeight
                     );
 #if DEBUG
-                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tset FPS\n");
+                tryAppendLog(DateTime.Now.ToString() + "\tset FPS\n");
 #endif
                 //WebCam 沒有 FPS
                 this.cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps,24);
 #if DEBUG
-                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tget FPS\n");
+                tryAppendLog(DateTime.Now.ToString() + "\tget FPS\n");
 #endif
                 this.fps = (int)this.cap.GetCaptureProperty(Emgu.CV.CvEnum.CapProp.Fps);
 #if DEBUG
-                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tset video format as XVID\n");
+                tryAppendLog(DateTime.Now.ToString() + "\tset video format as XVID\n");
 #endif
                 this.fourcc = VideoWriter.Fourcc('X', 'V', 'I', 'D');
 
 #if DEBUG
-                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tset frameCount\n");
+                tryAppendLog(DateTime.Now.ToString() + "\tset frameCount\n");
 #endif
                 this.cap.SetCaptureProperty(Emgu.CV.CvEnum.CapProp.FrameCount, 0);
                 this.initTime = DateTime.Now;
 
 #if DEBUG
-                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tset image grab event handler\n");
+                tryAppendLog(DateTime.Now.ToString() + "\tset image grab event handler\n");
 #endif
                 this.cap.ImageGrabbed += VideoCapture_ImageGrabbed;
 #if DEBUG
-                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tstart to do capture\n");
+                tryAppendLog(DateTime.Now.ToString() + "\tstart to do capture\n");
 #endif
                 this.cap.Start();
 
 #if DEBUG
-                File.AppendAllText(traceLog, DateTime.Now.ToString() + "\tCapture started successfully\n");
+                tryAppendLog(DateTime.Now.ToString() + "\tCapture started successfully\n");
 #endif
 
             }
@@ -243,12 +240,34 @@ namespace CamCapture
                 MessageBox.Show("Failed to link camear" + Environment.NewLine + ex.Message);
             }
         }
+
+        private void tryAppendLog(string msg)
+        {
+            int i;
+
+            for(i=0; i<5; ++i)
+            {
+                try
+                {
+                    File.AppendAllText("trace.log", msg);
+                    return;
+                }
+                catch
+                {
+                    ++i;
+                }
+            }
+
+            MessageBox.Show("Failed to write log : " + msg);
+        }
+
         private void VideoCapture_ImageGrabbed(object sender, EventArgs e)
         {
 #if DEBUG
             File.AppendAllText("trace.log", DateTime.Now.ToString() + "\tgrab image\n");
 #endif
-
+            this.m = null;
+            this.m = new Mat();
             try
             {
                 this.cap.Retrieve(m);
@@ -510,16 +529,27 @@ namespace CamCapture
                 }
 
             }
-           
-            try
+
+            int i = 0;
+            while(i<10)
             {
-                this.vwr.Write(m);
+                try
+                {
+                    this.vwr.Write(m);
+                    m = null;
+                    ++i;
+                    return;
+                }
+                catch (Exception ex)
+                {
+                    if (i >= 5)
+                    {
+                        MessageBox.Show("Failed on write Frame");
+                        throw new Exception("Failed on write Frame");
+                    }
+                }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Failed on write Frame");
-                throw new Exception("Failed on write Frame");
-            }
+            
         }
 
         private void onCountDownTimerEvent(Object source, ElapsedEventArgs e)
