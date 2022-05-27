@@ -19,8 +19,7 @@ namespace CamCapture
             {
                 try
                 {
-                    return FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
-
+                    return Assembly.GetExecutingAssembly().GetName().Version.ToString();
                 }
                 catch
                 {
@@ -41,7 +40,8 @@ namespace CamCapture
             {
                 try
                 {
-                    return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                    return FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).ProductVersion;
+
                 }
                 catch
                 {

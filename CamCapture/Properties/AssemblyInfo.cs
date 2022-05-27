@@ -32,26 +32,32 @@ using System.Runtime.InteropServices;
 // 您可以指定所有的值，也可以使用 '*' 將組建和修訂編號
 // 設為預設，如下所示:
 // [assembly: AssemblyVersion("1.0.*")]
+
+
 //[assembly: AssemblyVersion("1.0.0.0")]
 //[assembly: AssemblyFileVersion("1.0.0.0")]
+// 只能都是數字
 
-//只能都是數字
+// ******* nuget Gitinof *********
+//PackageInof.Version
 [assembly: AssemblyVersion(
-	ThisAssembly.Git.BaseVersion.Major 
-    + "."+ThisAssembly.Git.BaseVersion.Minor
-    + "."+ThisAssembly.Git.BaseVersion.Patch
-	+ "."+ThisAssembly.Git.Commits)]
+	ThisAssembly.Git.BaseVersion.Major
+	+ "." + ThisAssembly.Git.BaseVersion.Minor
+	+ "." + ThisAssembly.Git.BaseVersion.Patch
+	+ "." + ThisAssembly.Git.Commits)]
 
+//PackageInof.Build
 [assembly: AssemblyInformationalVersion(
+	ThisAssembly.Git.Branch + ":" +
 	ThisAssembly.Git.SemVer.Major + "." +
 	ThisAssembly.Git.SemVer.Minor + "." +
-	ThisAssembly.Git.SemVer.Patch + "-" +
-	ThisAssembly.Git.Branch + ":" +
-	ThisAssembly.Git.Commit + "@" +
-	ThisAssembly.Git.CommitDate)]
+	ThisAssembly.Git.SemVer.Patch + " (" +
+	ThisAssembly.Git.Commit + " @ " +
+	ThisAssembly.Git.CommitDate + " )")]
 
+//檔案的內容中的檔案版本
 [assembly: AssemblyFileVersion(
-    ThisAssembly.Git.SemVer.Major
-    + "." + ThisAssembly.Git.SemVer.Minor 
+	ThisAssembly.Git.SemVer.Major
+	+ "." + ThisAssembly.Git.SemVer.Minor
 	+ "." + ThisAssembly.Git.SemVer.Patch
-	+ "." + ThisAssembly.Git.Commit)]
+	+ "." + ThisAssembly.Git.Commits)]
