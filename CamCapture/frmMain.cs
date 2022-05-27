@@ -266,8 +266,6 @@ namespace CamCapture
 #if DEBUG
             File.AppendAllText("trace.log", DateTime.Now.ToString() + "\tgrab image\n");
 #endif
-            this.m = null;
-            this.m = new Mat();
             try
             {
                 this.cap.Retrieve(m);
@@ -536,7 +534,6 @@ namespace CamCapture
                 try
                 {
                     this.vwr.Write(m);
-                    m = null;
                     ++i;
                     return;
                 }
